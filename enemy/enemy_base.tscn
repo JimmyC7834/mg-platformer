@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://dau2fnoe0irkm"]
+
+[node name="EnemyBase" type="CharacterBody2D"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -16)
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+texture_filter = 1

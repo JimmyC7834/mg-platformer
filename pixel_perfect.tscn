@@ -1,0 +1,35 @@
+[gd_scene load_steps=3 format=3 uid="uid://d3bga7vm6wrsu"]
+
+[ext_resource type="Script" path="res://pixel_perfect_canvas.gd" id="1_bqpup"]
+[ext_resource type="PackedScene" uid="uid://7ltfqj2twact" path="res://world.tscn" id="1_u6hqs"]
+
+[node name="PixelPerfect" type="CanvasLayer" node_paths=PackedStringArray("pp_camera")]
+script = ExtResource("1_bqpup")
+pp_camera = NodePath("SubViewportContainer/SubViewport/Camera2D")
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+texture_filter = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch = true
+stretch_shrink = 3
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+disable_3d = true
+transparent_bg = true
+handle_input_locally = false
+snap_2d_vertices_to_pixel = true
+canvas_item_default_texture_filter = 0
+size = Vector2i(384, 216)
+size_2d_override = Vector2i(1152, 648)
+size_2d_override_stretch = true
+render_target_update_mode = 4
+
+[node name="World" parent="SubViewportContainer/SubViewport" instance=ExtResource("1_u6hqs")]
+
+[node name="Camera2D" type="Camera2D" parent="SubViewportContainer/SubViewport"]
+texture_filter = 1
+enabled = false

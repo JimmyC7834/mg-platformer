@@ -1,0 +1,109 @@
+[gd_scene load_steps=18 format=3 uid="uid://rtgtx38pl0xy"]
+
+[ext_resource type="PackedScene" uid="uid://dau2fnoe0irkm" path="res://enemy/enemy_base.tscn" id="1_fgrd7"]
+[ext_resource type="Texture2D" uid="uid://bnifeejh26i27" path="res://assets/186301.png" id="2_0pxil"]
+[ext_resource type="Script" path="res://enemy/enemy.gd" id="2_lkads"]
+[ext_resource type="Script" path="res://enemy/enemy_data.gd" id="3_insnj"]
+[ext_resource type="Script" path="res://enemy/hopper_brain.gd" id="3_xrss3"]
+[ext_resource type="Script" path="res://tint_fade.gd" id="4_knblc"]
+[ext_resource type="Script" path="res://enemy/enemy_hitbox.gd" id="5_8wmrb"]
+
+[sub_resource type="Resource" id="Resource_6gj0j"]
+script = ExtResource("3_insnj")
+displayName = &"Hopper"
+hp = 100.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_np7n8"]
+size = Vector2(16, 22)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_apeve"]
+atlas = ExtResource("2_0pxil")
+region = Rect2(16, 16, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8tlaj"]
+atlas = ExtResource("2_0pxil")
+region = Rect2(32, 16, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_eohlj"]
+atlas = ExtResource("2_0pxil")
+region = Rect2(48, 16, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fv82i"]
+atlas = ExtResource("2_0pxil")
+region = Rect2(64, 16, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7rfnx"]
+atlas = ExtResource("2_0pxil")
+region = Rect2(80, 16, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1bk5h"]
+atlas = ExtResource("2_0pxil")
+region = Rect2(96, 16, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_mjt4o"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_apeve")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8tlaj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_eohlj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fv82i")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7rfnx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1bk5h")
+}],
+"loop": true,
+"name": &"jump",
+"speed": 8.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_l2wq5"]
+radius = 16.0
+
+[node name="Hopper" instance=ExtResource("1_fgrd7")]
+collision_layer = 2
+script = ExtResource("2_lkads")
+data = SubResource("Resource_6gj0j")
+
+[node name="HopperBrain" type="Node" parent="." index="0"]
+script = ExtResource("3_xrss3")
+
+[node name="TintFade" type="Node" parent="." index="1" node_paths=PackedStringArray("node")]
+script = ExtResource("4_knblc")
+node = NodePath("../AnimatedSprite2D")
+
+[node name="CollisionShape2D" parent="." index="2"]
+position = Vector2(0, -11)
+shape = SubResource("RectangleShape2D_np7n8")
+
+[node name="AnimatedSprite2D" parent="." index="3"]
+position = Vector2(0, -24)
+scale = Vector2(3, 3)
+sprite_frames = SubResource("SpriteFrames_mjt4o")
+animation = &"jump"
+frame = 5
+frame_progress = 0.227304
+
+[node name="RayCast2D" type="RayCast2D" parent="." index="4"]
+position = Vector2(0, -16)
+target_position = Vector2(16, 0)
+
+[node name="Hitbox" type="Area2D" parent="." index="5" node_paths=PackedStringArray("parent")]
+collision_layer = 0
+collision_mask = 32768
+script = ExtResource("5_8wmrb")
+parent = NodePath("..")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox" index="0"]
+position = Vector2(0, -16)
+shape = SubResource("CircleShape2D_l2wq5")
+debug_color = Color(0.848897, 0.349975, 0.358237, 0.42)
