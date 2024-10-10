@@ -33,7 +33,6 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
     parent.apply_gravity(delta)
 
-    print(state)
     state.call(delta)
     
     $"../Flip".scale.x = dir

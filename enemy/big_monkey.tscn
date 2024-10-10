@@ -214,7 +214,7 @@ animations = [{
 size = Vector2(143.333, 74.6667)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_tsips"]
-size = Vector2(66, 53.3333)
+size = Vector2(82.6666, 53.3333)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0yxnb"]
 size = Vector2(58.6667, 41)
@@ -330,7 +330,7 @@ script = ExtResource("3_enelb")
 parent = NodePath("../..")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Flip/EnemyHitbox" index="0"]
-position = Vector2(52.3333, -26.6667)
+position = Vector2(44, -26.6667)
 shape = SubResource("RectangleShape2D_tsips")
 disabled = true
 debug_color = Color(0.856901, 0.31974, 0.467557, 0.42)
