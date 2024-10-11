@@ -6,9 +6,10 @@ const ACCELERATION: float = 30
 @onready var animated_sprite_2d: AnimatedSprite2D = $"../AnimatedSprite2D"
 @onready var ray_cast_2d: RayCast2D = $"../RayCast2D"
 
-var dir: Vector2 = Vector2.RIGHT
+var dir: int = 1
 
 var parent: Enemy
+var fsm: FSM = FSM.new()
 
 func _ready() -> void:
     if get_parent() is Enemy:
@@ -16,20 +17,25 @@ func _ready() -> void:
         parent.on_attacked.connect(func (): $"../TintFade".tint(Color.INDIAN_RED, 0.25))
         parent.on_death.connect(parent.queue_free)
         
-        animated_sprite_2d.play("jump")
+        fsm.set_state(_state_roam)
 
 func _physics_process(delta: float) -> void:
-    parent.apply_gravity(delta)
-
-    if ray_cast_2d.is_colliding():
-        dir.x *= -1
-    
-    ray_cast_2d.scale.x = dir.x
-    animated_sprite_2d.flip_h = dir.x == -1
-
-    if dir.x > 0:
-        parent.velocity.x = lerp(parent.velocity.x, SPEED * delta, ACCELERATION * delta)
-    elif dir.x < 0:
-        parent.velocity.x = lerp(parent.velocity.x, -SPEED * delta, ACCELERATION * delta)
-
+    fsm.physics_update(delta)
     parent.move_and_slide()
+
+var _state_roam = {
+    "start":
+        func ():
+            animated_sprite_2d.play("jump"),
+    "physics_update":
+        func(_delta):
+            parent.apply_gravity(_delta)
+
+            if ray_cast_2d.is_colliding():
+                dir *= -1
+            
+            ray_cast_2d.scale.x = dir
+            animated_sprite_2d.flip_h = dir == -1
+
+            parent.velocity.x = lerp(parent.velocity.x, dir * SPEED * _delta, ACCELERATION * _delta)
+}
