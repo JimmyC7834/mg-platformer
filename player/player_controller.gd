@@ -152,8 +152,11 @@ var _state_damaged = {
             animated_sprite_2d.play("hurt")
             $"../TintFade".tint(Color.INDIAN_RED, 0.15)
             await Util.wait(0.15)
-            player.invincible = false
-            fsm.set_state(_state_idle),
+            fsm.set_state(_state_idle)
+            for i in range(3):
+                await Util.wait(0.25)
+                $"../TintFade".tint(Color.DIM_GRAY, 0.25)
+            player.invincible = false,
             
     "physics_update":
         func (_delta):

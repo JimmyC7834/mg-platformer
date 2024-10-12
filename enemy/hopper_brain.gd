@@ -5,6 +5,7 @@ const ACCELERATION: float = 30
 
 @onready var animated_sprite_2d: AnimatedSprite2D = $"../AnimatedSprite2D"
 @onready var ray_cast_2d: RayCast2D = $"../RayCast2D"
+@onready var hitbox_animation: AnimationPlayer = $"../HitboxAnimation"
 
 var dir: int = 1
 
@@ -17,6 +18,7 @@ func _ready() -> void:
         parent.on_attacked.connect(func (): $"../TintFade".tint(Color.INDIAN_RED, 0.25))
         parent.on_death.connect(parent.queue_free)
         
+        hitbox_animation.play("hitbox")
         fsm.set_state(_state_roam)
 
 func _physics_process(delta: float) -> void:

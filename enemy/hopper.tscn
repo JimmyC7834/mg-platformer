@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://rtgtx38pl0xy"]
+[gd_scene load_steps=21 format=3 uid="uid://rtgtx38pl0xy"]
 
 [ext_resource type="PackedScene" uid="uid://dau2fnoe0irkm" path="res://enemy/enemy_base.tscn" id="1_fgrd7"]
 [ext_resource type="Texture2D" uid="uid://bnifeejh26i27" path="res://assets/186301.png" id="2_0pxil"]
@@ -69,6 +69,44 @@ animations = [{
 [sub_resource type="CircleShape2D" id="CircleShape2D_l2wq5"]
 radius = 16.0
 
+[sub_resource type="Animation" id="Animation_0wnvq"]
+resource_name = "hitbox"
+length = 0.06667
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Hitbox/CollisionShape2D:disabled")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.0333333),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+
+[sub_resource type="Animation" id="Animation_qh15v"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Hitbox/CollisionShape2D:disabled")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_fk0ar"]
+_data = {
+"RESET": SubResource("Animation_qh15v"),
+"hitbox": SubResource("Animation_0wnvq")
+}
+
 [node name="Hopper" instance=ExtResource("1_fgrd7")]
 collision_layer = 2
 script = ExtResource("2_lkads")
@@ -107,3 +145,8 @@ parent = NodePath("..")
 position = Vector2(0, -16)
 shape = SubResource("CircleShape2D_l2wq5")
 debug_color = Color(0.848897, 0.349975, 0.358237, 0.42)
+
+[node name="HitboxAnimation" type="AnimationPlayer" parent="." index="6"]
+libraries = {
+"": SubResource("AnimationLibrary_fk0ar")
+}

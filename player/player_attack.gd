@@ -7,8 +7,8 @@ const SLASH_SFXS = [
     preload("res://assets/audio/slash_sfx/footstep_snow_004.ogg"),
 ]
 
-const DEFAULT_HIT_KNOCBACK: int = 400
-const M_ATK_MANA_COST: int = 10
+const DEFAULT_HIT_KNOCBACK: float = 400
+const M_ATK_MANA_COST: float = 10
 
 const BASE_ATK_POWER: float = 2.5
 const M_ATK_FACTOR: float = 1.5
