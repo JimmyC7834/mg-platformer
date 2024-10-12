@@ -1,4 +1,4 @@
-[gd_scene load_steps=46 format=3 uid="uid://dhl7acv7vm643"]
+[gd_scene load_steps=48 format=3 uid="uid://dhl7acv7vm643"]
 
 [ext_resource type="Script" path="res://player/player.gd" id="1_air24"]
 [ext_resource type="Script" path="res://player/player_attack.gd" id="2_3wply"]
@@ -13,6 +13,8 @@
 [ext_resource type="Script" path="res://player/card_visual.gd" id="10_68xkr"]
 [ext_resource type="Texture2D" uid="uid://bg3btqkcykiou" path="res://assets/square.png" id="11_e000r"]
 [ext_resource type="Script" path="res://cards/card_inst.gd" id="12_40j0t"]
+[ext_resource type="Animation" uid="uid://4gwrrbsodmfs" path="res://player/anim/hitbox/atk01.res" id="14_kt4pu"]
+[ext_resource type="Animation" uid="uid://w4wpsuqfjuss" path="res://player/anim/hitbox/m_atk01.res" id="15_6idwx"]
 
 [sub_resource type="Resource" id="Resource_td3oh"]
 script = ExtResource("7_w737a")
@@ -234,12 +236,15 @@ size = Vector2(56, 34)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_lwas6"]
 size = Vector2(64, 44)
 
-[sub_resource type="Animation" id="Animation_2hmca"]
+[sub_resource type="CircleShape2D" id="CircleShape2D_kqfk0"]
+radius = 104.0
+
+[sub_resource type="Animation" id="Animation_rcpck"]
 length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Rotatable/HitBox/m_atk01:disabled")
+tracks/0/path = NodePath("Rotatable/ReleaseHitBox/release:disabled")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -251,7 +256,7 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Rotatable/HitBox/atk01:disabled")
+tracks/1/path = NodePath("Rotatable/HitBox/m_atk01:disabled")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -260,46 +265,42 @@ tracks/1/keys = {
 "update": 1,
 "values": [true]
 }
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Rotatable/HitBox/atk01:disabled")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
 
-[sub_resource type="Animation" id="Animation_wdcbw"]
-resource_name = "atk01"
-length = 0.266669
-step = 0.0166667
+[sub_resource type="Animation" id="Animation_37r37"]
+resource_name = "new_animation"
+length = 0.375006
+step = 0.0625
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Rotatable/HitBox/atk01:disabled")
+tracks/0/path = NodePath("Rotatable/ReleaseHitBox/release:disabled")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0.0166667, 0.1, 0.266667),
-"transitions": PackedFloat32Array(1, 1, 1),
+"times": PackedFloat32Array(0, 0.375),
+"transitions": PackedFloat32Array(1, 1),
 "update": 1,
-"values": [false, true, true]
+"values": [false, true]
 }
 
-[sub_resource type="Animation" id="Animation_1rosw"]
-resource_name = "m_atk01"
-length = 0.333336
-step = 0.0166667
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Rotatable/HitBox/m_atk01:disabled")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0.0166667, 0.133333, 0.333333),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 1,
-"values": [false, true, true]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_hw8lx"]
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_c6pmc"]
 _data = {
-"RESET": SubResource("Animation_2hmca"),
-"atk01": SubResource("Animation_wdcbw"),
-"m_atk01": SubResource("Animation_1rosw")
+"RESET": SubResource("Animation_rcpck"),
+"atk01": ExtResource("14_kt4pu"),
+"m_atk01": ExtResource("15_6idwx"),
+"release": SubResource("Animation_37r37")
 }
 
 [node name="Player" type="CharacterBody2D"]
@@ -333,7 +334,7 @@ texture_filter = 1
 position = Vector2(40, 12)
 scale = Vector2(3.5, 3.5)
 sprite_frames = SubResource("SpriteFrames_noq7c")
-animation = &"m_slash01"
+animation = &"slash04"
 frame = 2
 frame_progress = 1.0
 
@@ -358,20 +359,25 @@ shape = SubResource("RectangleShape2D_lwas6")
 disabled = true
 debug_color = Color(0.907048, 0.247217, 0.448053, 0.42)
 
+[node name="ReleaseHitBox" type="Area2D" parent="Rotatable"]
+collision_layer = 2
+collision_mask = 2
+
+[node name="release" type="CollisionShape2D" parent="Rotatable/ReleaseHitBox"]
+position = Vector2(0, -8)
+shape = SubResource("CircleShape2D_kqfk0")
+disabled = true
+debug_color = Color(0.76149, 0.305463, 0.832745, 0.42)
+
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 texture_filter = 1
 position = Vector2(0, -48)
 scale = Vector2(3, 3)
 sprite_frames = ExtResource("4_y8iwo")
-animation = &"brake"
+animation = &"release"
 frame = 5
 frame_progress = 1.0
 flip_h = true
-
-[node name="HitboxAnimation" type="AnimationPlayer" parent="."]
-libraries = {
-"": SubResource("AnimationLibrary_hw8lx")
-}
 
 [node name="CardVisual" type="Node2D" parent="."]
 script = ExtResource("10_68xkr")
@@ -423,3 +429,8 @@ position = Vector2(0, -30.4)
 scale = Vector2(0.2, 0.3)
 texture = ExtResource("11_e000r")
 script = ExtResource("12_40j0t")
+
+[node name="HitboxAnimation" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_c6pmc")
+}

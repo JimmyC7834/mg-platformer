@@ -17,6 +17,7 @@ const M_ATK_FACTOR: float = 1.5
 @onready var animated_sprite_2d: AnimatedSprite2D = $"../AnimatedSprite2D"
 @onready var hitbox_anim: AnimationPlayer = $"../HitboxAnimation"
 @onready var hit_box: Area2D = $"../Rotatable/HitBox"
+@onready var release_hit_box: Area2D = $"../Rotatable/ReleaseHitBox"
 
 var player: Player
 
@@ -25,7 +26,9 @@ func _ready() -> void:
         player = get_parent()
     
     hit_box.body_entered.connect(handle_hitbox_entered)
+    release_hit_box.body_entered.connect(handle_release_hitbox_entered)
     player.request_perform_attack.connect(handle_attack_request)
+    player.request_release_attack.connect(handle_release_attack_request)
 
 func handle_attack_request():
     var buffer = "ATK" if Input.is_action_just_pressed("ATK") else "M_ATK"
@@ -52,6 +55,12 @@ func handle_attack_request():
             player.mana += M_ATK_MANA_COST
             player.on_m_attack.emit()
 
+func handle_release_attack_request():
+    if not player.is_on_floor():
+        player.velocity.y = 0
+    hitbox_anim.play("RESET")
+    hitbox_anim.play("release")
+    player.on_attack.emit()
 
 func handle_hitbox_entered(body: Node2D):
     if body is Enemy:
@@ -61,4 +70,9 @@ func handle_hitbox_entered(body: Node2D):
 
     player.velocity.x = player.facing * -DEFAULT_HIT_KNOCBACK
     player.velocity.x *= 1.0 if player.is_on_floor() else 0.25
-    
+
+func handle_release_hitbox_entered(body: Node2D):
+    if body is Enemy:
+        Util.hitstop(0.15)
+        body.velocity.x = player.facing * DEFAULT_HIT_KNOCBACK * 8
+        body.attacked(BASE_ATK_POWER * 3)

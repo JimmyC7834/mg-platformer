@@ -8,22 +8,28 @@ const JUMP_HEIGHT: float = 780
 
 @onready var slash_animation: AnimatedSprite2D = $"../Rotatable/SlashAnimation"
 @onready var animated_sprite_2d: AnimatedSprite2D = $"../AnimatedSprite2D"
-var player: Player
+@onready var hitbox_animation: AnimationPlayer = $"../HitboxAnimation"
 
+var player: Player
 var fsm: FSM = FSM.new()
 
 func _ready() -> void:
     if get_parent() is Player:
         player = get_parent()
         player.on_damaged.connect(
-            func():
+            func ():
                 if not player.invincible:
                     fsm.set_state(_state_damaged))
+        player.request_release_attack.connect(
+            func ():
+                fsm.set_state(_state_release)
+        )
         fsm.set_state(_state_idle)
 
 func _physics_process(delta):
     getInputAxis()
     fsm.physics_update(delta)
+    request_release()
     player.move_and_slide()
 
 var _state_idle = {
@@ -162,6 +168,28 @@ var _state_damaged = {
         func (_delta):
             apply_gravity(_delta)
 }
+
+var _state_release = {
+    "start":
+        func ():
+            if player.invincible: return
+            player.velocity.x = 0
+            player.invincible = true
+            Util.hitstop(0.1)
+            animated_sprite_2d.play("release")
+            $"../TintFade".tint(Color.DARK_ORCHID, 6.0 / 16)
+            await Util.wait((6.0 + 1) / 16)
+            fsm.set_state(_state_idle)
+            player.invincible = false,
+
+    "physics_update":
+        func (_delta):
+            pass
+}
+
+func request_release():
+    if Input.is_action_just_pressed("RELEASE") and not hitbox_animation.is_playing():
+        player.request_perform_release.emit()
 
 func apply_gravity(delta):
     if player.is_on_floor():

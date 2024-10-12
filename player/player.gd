@@ -17,6 +17,8 @@ var invincible: bool = false
 var is_dashing: bool = false
 
 signal request_perform_attack()
+signal request_perform_release()
+signal request_release_attack()
 
 signal on_attack()
 signal on_m_attack()
@@ -28,7 +30,7 @@ func _ready() -> void:
     Global.player = self
 
 func _physics_process(delta: float) -> void:
-    mana = max(0, mana - MANA_DECAY_RATE * delta)
+    set_mana(max(0, mana - MANA_DECAY_RATE * delta))
     EventBus.on_player_mana_changed.emit(mana)
 
 func attacked_by(e: Enemy):
@@ -38,3 +40,6 @@ func attacked_by(e: Enemy):
 
 func take_damage():
     on_damaged.emit()
+
+func set_mana(value: float):
+    mana = max(0, value)
