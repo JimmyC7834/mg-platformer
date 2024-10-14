@@ -201,7 +201,7 @@ func apply_gravity(delta):
         player.velocity.y = LIMIT_SPEED_Y
 
 func horizontalMovement(delta):
-    if player.axis.x != 0:
+    if abs(player.axis.x) == 1:
         player.facing = player.axis.x
         animated_sprite_2d.flip_h = player.facing == 1
         $"../Rotatable".scale.x = player.facing

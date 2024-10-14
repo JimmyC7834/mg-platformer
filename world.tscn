@@ -1,11 +1,13 @@
-[gd_scene load_steps=10 format=4 uid="uid://7ltfqj2twact"]
+[gd_scene load_steps=12 format=4 uid="uid://7ltfqj2twact"]
 
 [ext_resource type="PackedScene" uid="uid://dhl7acv7vm643" path="res://player/player.tscn" id="1_7km1b"]
 [ext_resource type="Texture2D" uid="uid://bhdarnmqt0mvv" path="res://assets/rock_packed.png" id="2_jvsir"]
 [ext_resource type="Script" path="res://pp_camera.gd" id="3_02f3j"]
 [ext_resource type="Script" path="res://mana_bar.gd" id="4_5d4xu"]
 [ext_resource type="Texture2D" uid="uid://qyqbur007cea" path="res://assets/mana_gauge_progress.png" id="5_gqor0"]
+[ext_resource type="Texture2D" uid="uid://botwmudi6y0oq" path="res://assets/card_progress.png" id="6_k7ovn"]
 [ext_resource type="PackedScene" uid="uid://rtgtx38pl0xy" path="res://enemy/hopper.tscn" id="6_pn7su"]
+[ext_resource type="Script" path="res://card_gauge.gd" id="6_r0rmd"]
 [ext_resource type="PackedScene" uid="uid://da4mpks3nh02m" path="res://enemy/big_monkey.tscn" id="8_lm466"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_l5j3c"]
@@ -132,6 +134,77 @@ fill_mode = 4
 texture_progress = ExtResource("5_gqor0")
 tint_progress = Color(0.79244, 0.420602, 0.934961, 1)
 script = ExtResource("4_5d4xu")
+
+[node name="CardGauge" type="HBoxContainer" parent="CanvasLayer"]
+offset_left = 136.0
+offset_top = 64.0
+offset_right = 176.0
+offset_bottom = 74.0
+scale = Vector2(3, 3)
+script = ExtResource("6_r0rmd")
+
+[node name="TextureProgressBar" type="TextureProgressBar" parent="CanvasLayer/CardGauge"]
+texture_filter = 1
+layout_mode = 2
+value = 50.0
+fill_mode = 3
+texture_under = ExtResource("6_k7ovn")
+texture_progress = ExtResource("6_k7ovn")
+tint_under = Color(0.244776, 0.244776, 0.244776, 1)
+
+[node name="TextureProgressBar2" type="TextureProgressBar" parent="CanvasLayer/CardGauge"]
+texture_filter = 1
+layout_mode = 2
+value = 50.0
+fill_mode = 3
+texture_under = ExtResource("6_k7ovn")
+texture_progress = ExtResource("6_k7ovn")
+tint_under = Color(0.244776, 0.244776, 0.244776, 1)
+
+[node name="TextureProgressBar3" type="TextureProgressBar" parent="CanvasLayer/CardGauge"]
+texture_filter = 1
+layout_mode = 2
+value = 50.0
+fill_mode = 3
+texture_under = ExtResource("6_k7ovn")
+texture_progress = ExtResource("6_k7ovn")
+tint_under = Color(0.244776, 0.244776, 0.244776, 1)
+
+[node name="TextureProgressBar4" type="TextureProgressBar" parent="CanvasLayer/CardGauge"]
+texture_filter = 1
+layout_mode = 2
+value = 50.0
+fill_mode = 3
+texture_under = ExtResource("6_k7ovn")
+texture_progress = ExtResource("6_k7ovn")
+tint_under = Color(0.244776, 0.244776, 0.244776, 1)
+
+[node name="TextureProgressBar5" type="TextureProgressBar" parent="CanvasLayer/CardGauge"]
+texture_filter = 1
+layout_mode = 2
+value = 50.0
+fill_mode = 3
+texture_under = ExtResource("6_k7ovn")
+texture_progress = ExtResource("6_k7ovn")
+tint_under = Color(0.244776, 0.244776, 0.244776, 1)
+
+[node name="TextureProgressBar6" type="TextureProgressBar" parent="CanvasLayer/CardGauge"]
+texture_filter = 1
+layout_mode = 2
+value = 50.0
+fill_mode = 3
+texture_under = ExtResource("6_k7ovn")
+texture_progress = ExtResource("6_k7ovn")
+tint_under = Color(0.244776, 0.244776, 0.244776, 1)
+
+[node name="TextureProgressBar7" type="TextureProgressBar" parent="CanvasLayer/CardGauge"]
+texture_filter = 1
+layout_mode = 2
+value = 50.0
+fill_mode = 3
+texture_under = ExtResource("6_k7ovn")
+texture_progress = ExtResource("6_k7ovn")
+tint_under = Color(0.244776, 0.244776, 0.244776, 1)
 
 [node name="Hopper" parent="." instance=ExtResource("6_pn7su")]
 position = Vector2(317, 427)

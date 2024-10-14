@@ -21,7 +21,9 @@ signal request_perform_release()
 signal request_release_attack()
 
 signal on_attack()
+signal process_attack_value(value: AttackInfo)
 signal on_m_attack()
+signal process_m_attack_value(value: AttackInfo)
 
 signal on_attacked()
 signal on_damaged()
@@ -43,3 +45,9 @@ func take_damage():
 
 func set_mana(value: float):
     mana = max(0, value)
+
+class AttackInfo:
+    var value: float = 0.0
+    
+    func _init(value: float):
+        self.value = value

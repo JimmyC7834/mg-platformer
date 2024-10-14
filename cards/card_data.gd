@@ -14,3 +14,6 @@ func register(_player: Player):
 
 func _register():
     pass
+
+func process_attack(value: Player.AttackInfo):
+    pass

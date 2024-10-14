@@ -66,7 +66,9 @@ func handle_hitbox_entered(body: Node2D):
     if body is Enemy:
         Util.hitstop(0.08)
         body.velocity.x = player.facing * DEFAULT_HIT_KNOCBACK * 5
-        body.attacked(BASE_ATK_POWER)
+        var info: Player.AttackInfo = Player.AttackInfo.new(BASE_ATK_POWER)
+        player.process_attack_value.emit(info)
+        body.attacked(info.value)
 
     player.velocity.x = player.facing * -DEFAULT_HIT_KNOCBACK
     player.velocity.x *= 1.0 if player.is_on_floor() else 0.25
