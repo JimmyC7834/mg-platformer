@@ -8,11 +8,13 @@ const SLASH_SFXS = [
 ]
 
 const DEFAULT_HIT_KNOCBACK: float = 400
-const M_ATK_MANA_COST: float = 10
+const M_ATK_MANA_COST: float = 5
+const M_ATK_INTERVAL: float = 0.3
 
 const BASE_ATK_POWER: float = 2.5
-const M_ATK_FACTOR: float = 1.5
+const M_ATK_FACTOR: float = 0.5
 
+@onready var projectile_spawn_point: Marker2D = $"../Rotatable/ProjectileSpawnPoint"
 @onready var slash_animation: AnimatedSprite2D = $"../Rotatable/SlashAnimation"
 @onready var animated_sprite_2d: AnimatedSprite2D = $"../AnimatedSprite2D"
 @onready var hitbox_anim: AnimationPlayer = $"../HitboxAnimation"
@@ -21,6 +23,8 @@ const M_ATK_FACTOR: float = 1.5
 
 var player: Player
 
+var in_m_atk: bool = false
+
 func _ready() -> void:
     if get_parent() is Player:
         player = get_parent()
@@ -28,7 +32,9 @@ func _ready() -> void:
     hit_box.body_entered.connect(handle_hitbox_entered)
     release_hit_box.body_entered.connect(handle_release_hitbox_entered)
     player.request_perform_attack.connect(handle_attack_request)
-    player.request_release_attack.connect(handle_release_attack_request)
+    player.request_m_attack.connect(start_m_atk)
+    player.request_stop_m_attack.connect(end_m_atk)
+    #player.request_release_attack.connect(handle_release_attack_request)
 
 func handle_attack_request():
     var buffer = "ATK" if Input.is_action_just_pressed("ATK") else "M_ATK"
@@ -40,25 +46,35 @@ func handle_attack_request():
     if not player.is_on_floor():
         player.velocity.y = 0
     
-    Audio.play(SLASH_SFXS.pick_random(), 0.0, 2.0)
+    if buffer == "M_ATK" and player.is_mana_break:
+        return
     
     match buffer:
+        #"ATK":
+            #hitbox_anim.play("atk01")
+            #animated_sprite_2d.play("atk0%d" % randi_range(1, 2))
+            #slash_animation.play("slash0%d" % randi_range(1, 4))
+            #player.on_attack.emit()
         "ATK":
-            hitbox_anim.play("atk01")
-            animated_sprite_2d.play("atk0%d" % randi_range(1, 2))
-            slash_animation.play("slash0%d" % randi_range(1, 4))
-            player.on_attack.emit()
-        "M_ATK":
             hitbox_anim.play("m_atk01")
             animated_sprite_2d.play("m_atk0%d" % randi_range(1, 2))
             slash_animation.play("m_slash0%d" % randi_range(1, 4))
             player.mana += M_ATK_MANA_COST
             player.on_m_attack.emit()
+        "M_ATK":
+            animated_sprite_2d.play("m_atk0%d" % randi_range(1, 2))
+            Projectiles.spawn_projectile(
+                Projectiles.TYPE.DEFAULT,
+                projectile_spawn_point.global_position,
+                player.facing * Vector2.RIGHT * 300)
+            player.mana += M_ATK_MANA_COST
+    Audio.play(SLASH_SFXS.pick_random(), 0.0, 2.0)
 
 func handle_release_attack_request():
     if not player.is_on_floor():
         player.velocity.y = 0
-    hitbox_anim.play("RESET")
+    $"../Rotatable/HitBox/atk01".disabled = true
+    $"../Rotatable/HitBox/m_atk01".disabled = true
     hitbox_anim.play("release")
     player.on_attack.emit()
 
@@ -78,3 +94,22 @@ func handle_release_hitbox_entered(body: Node2D):
         Util.hitstop(0.15)
         body.velocity.x = player.facing * DEFAULT_HIT_KNOCBACK * 8
         body.attacked(BASE_ATK_POWER * 3)
+
+func start_m_atk():
+    in_m_atk = true
+    player.set_mana(player.mana + M_ATK_MANA_COST)
+    do_m_atk()
+
+func end_m_atk():
+    in_m_atk = false
+
+func do_m_atk():
+    animated_sprite_2d.play("m_atk0%d" % randi_range(1, 2))
+    Projectiles.spawn_projectile(
+        Projectiles.TYPE.DEFAULT,
+        projectile_spawn_point.global_position,
+        player.facing * Vector2.RIGHT * 400)
+    player.set_mana(player.mana + M_ATK_MANA_COST)
+    if in_m_atk:
+        await Util.wait(M_ATK_INTERVAL)
+        do_m_atk()

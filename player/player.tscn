@@ -334,6 +334,9 @@ shape = SubResource("RectangleShape2D_xcv76")
 [node name="Rotatable" type="Node2D" parent="."]
 position = Vector2(0, -40)
 
+[node name="ProjectileSpawnPoint" type="Marker2D" parent="Rotatable"]
+position = Vector2(48, 16)
+
 [node name="SlashAnimation" type="AnimatedSprite2D" parent="Rotatable"]
 texture_filter = 1
 position = Vector2(40, 12)

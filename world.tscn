@@ -1,10 +1,11 @@
-[gd_scene load_steps=12 format=4 uid="uid://7ltfqj2twact"]
+[gd_scene load_steps=13 format=4 uid="uid://7ltfqj2twact"]
 
 [ext_resource type="PackedScene" uid="uid://dhl7acv7vm643" path="res://player/player.tscn" id="1_7km1b"]
 [ext_resource type="Texture2D" uid="uid://bhdarnmqt0mvv" path="res://assets/rock_packed.png" id="2_jvsir"]
 [ext_resource type="Script" path="res://pp_camera.gd" id="3_02f3j"]
 [ext_resource type="Script" path="res://mana_bar.gd" id="4_5d4xu"]
 [ext_resource type="Texture2D" uid="uid://qyqbur007cea" path="res://assets/mana_gauge_progress.png" id="5_gqor0"]
+[ext_resource type="Script" path="res://tint_fade.gd" id="6_c8ks3"]
 [ext_resource type="Texture2D" uid="uid://botwmudi6y0oq" path="res://assets/card_progress.png" id="6_k7ovn"]
 [ext_resource type="PackedScene" uid="uid://rtgtx38pl0xy" path="res://enemy/hopper.tscn" id="6_pn7su"]
 [ext_resource type="Script" path="res://card_gauge.gd" id="6_r0rmd"]
@@ -134,6 +135,10 @@ fill_mode = 4
 texture_progress = ExtResource("5_gqor0")
 tint_progress = Color(0.79244, 0.420602, 0.934961, 1)
 script = ExtResource("4_5d4xu")
+
+[node name="TintFade" type="Node" parent="CanvasLayer/ManaBar" node_paths=PackedStringArray("node")]
+script = ExtResource("6_c8ks3")
+node = NodePath("..")
 
 [node name="CardGauge" type="HBoxContainer" parent="CanvasLayer"]
 offset_left = 136.0

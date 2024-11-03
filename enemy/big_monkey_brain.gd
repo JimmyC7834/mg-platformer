@@ -18,6 +18,11 @@ func _ready() -> void:
     if get_parent() is Enemy:
         parent = get_parent()
         parent.on_attacked.connect(func (): $"../TintFade".tint(Color.INDIAN_RED, 0.25))
+        parent.on_attacked.connect(
+        func ():
+            if fsm.state in [_state_idle, _state_roam]:
+                fsm.set_state(_state_chase)
+        )
         parent.on_death.connect(parent.queue_free)
         
         fsm.set_state(_state_idle)

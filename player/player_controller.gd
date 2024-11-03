@@ -18,12 +18,17 @@ func _ready() -> void:
         player = get_parent()
         player.on_damaged.connect(
             func ():
-                if not player.invincible:
+                if player.is_parrying:
+                    fsm.set_state(_state_parriying)
+                elif not player.invincible:
                     fsm.set_state(_state_damaged))
+        
         player.request_release_attack.connect(
             func ():
-                fsm.set_state(_state_release)
-        )
+                fsm.set_state(_state_release))
+
+        player.on_mana_break.connect(mana_break_tint)
+
         fsm.set_state(_state_idle)
 
 func _physics_process(delta):
@@ -46,11 +51,12 @@ var _state_idle = {
             apply_gravity(_delta)
             apply_velocity_decay(_delta)
             
-            if Input.is_action_just_pressed("ATK") or Input.is_action_just_pressed("M_ATK"):
+            if Input.is_action_just_pressed("ATK"):
                 player.request_perform_attack.emit()
                 await animated_sprite_2d.animation_finished
                 animated_sprite_2d.play("idle")
-            
+            elif Input.is_action_just_pressed("M_ATK"):
+                fsm.set_state(_state_m_atk)
             if player.axis.x != 0:
                 fsm.set_state(_state_run)
             elif not player.is_on_floor():
@@ -75,8 +81,10 @@ var _state_run = {
 
             elif not player.is_on_floor():
                 fsm.set_state(_state_fall)
-            elif Input.is_action_just_pressed("ATK") or Input.is_action_just_pressed("M_ATK"):
+            elif Input.is_action_just_pressed("ATK"):
                 player.request_perform_attack.emit()
+            elif Input.is_action_just_pressed("M_ATK"):
+                fsm.set_state(_state_m_atk)
             elif Input.is_action_just_pressed("DASH"):
                 fsm.set_state(_state_dash)
             elif player.axis.x == 0:
@@ -147,6 +155,20 @@ var _state_dash = {
                 fsm.set_state(_state_fall),
 }
 
+var _state_m_atk = {
+    "start":
+        func ():
+            player.request_m_attack.emit(),
+    "physics_update":
+        func (_delta):
+            apply_gravity(_delta)
+            apply_velocity_decay(_delta)
+            
+            if Input.is_action_just_released("M_ATK"):
+                player.request_stop_m_attack.emit()
+                fsm.set_state(_state_idle)
+}
+
 var _state_damaged = {
     "start":
         func ():
@@ -169,23 +191,52 @@ var _state_damaged = {
             apply_gravity(_delta)
 }
 
+var _state_parriying = {
+    "start":
+        func ():
+            print("parry")
+            player.invincible = true
+            player.velocity.y = 0
+            player.velocity.x = -player.facing * Player.HURT_KNOCKBACK * 5
+            Util.hitstop(0.15)
+            
+            animated_sprite_2d.play("release")
+            animated_sprite_2d.flip_h = !animated_sprite_2d.flip_h
+            await Util.wait((6.0 + 1) / 16)
+            animated_sprite_2d.flip_h = !animated_sprite_2d.flip_h
+            fsm.set_state(_state_idle)
+            player.invincible = false,
+            
+    "physics_update":
+        func (_delta):
+            apply_velocity_decay(_delta)
+}
+
 var _state_release = {
     "start":
         func ():
-            if player.invincible: return
+            if player.invincible or player.is_parrying: return
             player.velocity.x = 0
-            player.invincible = true
+            player.is_parrying = true
             Util.hitstop(0.1)
             animated_sprite_2d.play("release")
+            player.velocity.x = -player.facing * 75
+            player.velocity.y = 0
             $"../TintFade".tint(Color.DARK_ORCHID, 6.0 / 16)
             await Util.wait((6.0 + 1) / 16)
             fsm.set_state(_state_idle)
-            player.invincible = false,
+            player.is_parrying = false,
 
     "physics_update":
         func (_delta):
             pass
 }
+
+func mana_break_tint():
+    if player.is_mana_break:
+        $"../TintFade".tint(Color.BLUE_VIOLET, 0.35)
+        await Util.wait(0.35)
+        mana_break_tint()
 
 func request_release():
     if Input.is_action_just_pressed("RELEASE") and not hitbox_animation.is_playing():

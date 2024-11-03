@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="mg-platformer"
-run/main_scene="res://pixel_perfect.tscn"
+run/main_scene="res://world.tscn"
 config/features=PackedStringArray("4.3", "Forward Plus")
 config/icon="res://icon.svg"
 
@@ -21,6 +21,7 @@ EventBus="*res://autoloads/event_bus.gd"
 Global="*res://autoloads/global.gd"
 Util="*res://autoloads/util.gd"
 Audio="*res://autoloads/audio.gd"
+Projectiles="*res://autoloads/projectiles.gd"
 
 [display]
 

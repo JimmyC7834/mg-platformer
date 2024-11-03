@@ -12,5 +12,5 @@ func _ready() -> void:
 func update(playerCards: PlayerCards):
     for i in range(len(progress_bars)):
         progress_bars[i].value = playerCards.card_gauge if i == playerCards.cursor else \
-                                 100 if i < len(playerCards.cards) else 0
+                                 100 if i < len(playerCards.cards) - 1 else 0
         progress_bars[i].visible = i < len(playerCards.cards)
