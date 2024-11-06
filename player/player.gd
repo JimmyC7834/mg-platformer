@@ -3,11 +3,14 @@ extends CharacterBody2D
 class_name Player
 
 const MANA_DECAY_RATE: float = 4
-const MANA_BREAK_DECAY_RATE: float = 10
+const MANA_BREAK_DECAY_RATE: float = 15
 const HURT_KNOCKBACK: float = 100.0
 
 const DASH_SPAN: float = 0.25
 const DASH_SPEED: float = 400.0
+
+var hp: float = 100
+var max_hp: float = 100
 
 var mana: float = 0
 var max_mana: float = 100
@@ -38,6 +41,9 @@ signal on_mana_break()
 
 func _ready() -> void:
     Global.player = self
+    
+    EventBus.on_player_hp_changed.emit(hp)
+    EventBus.on_player_mana_changed.emit(mana)
 
 func _physics_process(delta: float) -> void:
     set_mana(max(0, mana - (MANA_BREAK_DECAY_RATE if is_mana_break else MANA_DECAY_RATE) * delta))
@@ -45,10 +51,11 @@ func _physics_process(delta: float) -> void:
 
 func attacked_by(e: Enemy):
     if invincible: return
-    take_damage()
+    take_damage(1)
     on_attacked.emit()
 
-func take_damage():
+func take_damage(value: float):
+    set_hp(hp - value)
     on_damaged.emit()
 
 func set_mana(value: float):
@@ -60,6 +67,11 @@ func set_mana(value: float):
         EventBus.on_player_mana_break.emit()
     elif mana == 0:
         is_mana_break = false
+    EventBus.on_player_mana_changed.emit(mana)
+
+func set_hp(value: float):
+    hp = max(value, 0)
+    EventBus.on_player_hp_changed.emit(hp)
 
 class AttackInfo:
     var value: float = 0.0

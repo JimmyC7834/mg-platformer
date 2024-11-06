@@ -40,8 +40,8 @@ func _physics_process(delta):
 var _state_idle = {
     "start":
         func ():
-            if abs(player.velocity.y) < 100.0:
-                chain_animation(["land", "idle"])     
+            if abs(player.velocity.y) < 100.0 and not player.is_on_floor():
+                chain_animation(["land", "idle"])
             elif abs(player.velocity.x) > 100.0:
                 chain_animation(["brake", "idle"])
             else:   
@@ -55,7 +55,7 @@ var _state_idle = {
                 player.request_perform_attack.emit()
                 await animated_sprite_2d.animation_finished
                 animated_sprite_2d.play("idle")
-            elif Input.is_action_just_pressed("M_ATK"):
+            elif Input.is_action_just_pressed("M_ATK") and not player.is_mana_break:
                 fsm.set_state(_state_m_atk)
             if player.axis.x != 0:
                 fsm.set_state(_state_run)
@@ -65,6 +65,8 @@ var _state_idle = {
                 fsm.set_state(_state_jump)
             elif Input.is_action_just_pressed("DASH"):
                 fsm.set_state(_state_dash)
+            elif Input.is_action_just_pressed("PRAY"):
+                fsm.set_state(_state_pray)
 }
 
 var _state_run = {
@@ -89,6 +91,8 @@ var _state_run = {
                 fsm.set_state(_state_dash)
             elif player.axis.x == 0:
                 fsm.set_state(_state_idle)
+            elif Input.is_action_just_pressed("PRAY"):
+                fsm.set_state(_state_pray)
 }
 
 var _state_jump = {
@@ -215,7 +219,9 @@ var _state_parriying = {
 var _state_release = {
     "start":
         func ():
-            if player.invincible or player.is_parrying: return
+            if player.invincible or player.is_parrying:
+                fsm.set_state(_state_idle)
+                return
             player.velocity.x = 0
             player.is_parrying = true
             Util.hitstop(0.1)
@@ -230,6 +236,26 @@ var _state_release = {
     "physics_update":
         func (_delta):
             pass
+}
+
+var _state_pray = {
+    "start":
+        func ():
+            player.velocity.x = 0
+            player.velocity.y = 0
+            chain_animation(["enter_pray", "pray"]),
+    "physics_update":
+        func (_delta):
+            if Input.is_action_just_released("PRAY"):
+                fsm.set_state(_state_pray_exit)
+}
+
+var _state_pray_exit = {
+    "start":
+        func ():
+            animated_sprite_2d.play("exit_pray")
+            await animated_sprite_2d.animation_finished
+            fsm.set_state(_state_idle),
 }
 
 func mana_break_tint():

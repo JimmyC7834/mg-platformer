@@ -4,7 +4,7 @@ class_name Projectile
 
 @export var damage: float = 1.0
 @export var velocity: Vector2
-@export var span: float = .75
+@export var span: float = .5
 
 func _ready():
     body_entered.connect(handle_body_enter)

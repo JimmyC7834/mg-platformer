@@ -382,9 +382,8 @@ texture_filter = 1
 position = Vector2(0, -48)
 scale = Vector2(3, 3)
 sprite_frames = ExtResource("4_y8iwo")
-animation = &"release"
-frame = 5
-frame_progress = 1.0
+animation = &"pray"
+frame_progress = 0.806376
 flip_h = true
 
 [node name="CardVisual" type="Node2D" parent="."]

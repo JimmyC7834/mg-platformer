@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=4 uid="uid://7ltfqj2twact"]
+[gd_scene load_steps=15 format=4 uid="uid://7ltfqj2twact"]
 
 [ext_resource type="PackedScene" uid="uid://dhl7acv7vm643" path="res://player/player.tscn" id="1_7km1b"]
 [ext_resource type="Texture2D" uid="uid://bhdarnmqt0mvv" path="res://assets/rock_packed.png" id="2_jvsir"]
@@ -10,6 +10,8 @@
 [ext_resource type="PackedScene" uid="uid://rtgtx38pl0xy" path="res://enemy/hopper.tscn" id="6_pn7su"]
 [ext_resource type="Script" path="res://card_gauge.gd" id="6_r0rmd"]
 [ext_resource type="PackedScene" uid="uid://da4mpks3nh02m" path="res://enemy/big_monkey.tscn" id="8_lm466"]
+[ext_resource type="Texture2D" uid="uid://bg3btqkcykiou" path="res://assets/square.png" id="9_g457d"]
+[ext_resource type="Script" path="res://hp_bar.gd" id="10_7aewi"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_l5j3c"]
 texture = ExtResource("2_jvsir")
@@ -106,21 +108,6 @@ sources/0 = SubResource("TileSetAtlasSource_l5j3c")
 
 [node name="World" type="Node"]
 
-[node name="TileMapLayer" type="TileMapLayer" parent="."]
-texture_filter = 1
-scale = Vector2(3, 3)
-tile_map_data = PackedByteArray("AAAHAAoAAAAAAAAAAAAIAAoAAAAAAAAAAAAJAAoAAAAAAAAAAAAKAAoAAAAAAAAAAAALAAoAAAAAAAAAAAAMAAoAAAAAAAAAAAANAAoAAAAAAAAAAAAOAAoAAAAAAAAAAAALAAkAAAAAAAAAAAAGAAoAAAAAAAAAAAAFAAoAAAAAAAAAAAAEAAoAAAAAAAAAAAADAAoAAAAAAAAAAAACAAoAAAAAAAAAAAABAAoAAAAAAAAAAAAAAAoAAAAAAAAAAAD//woAAAAAAAAAAAAPAAoAAAAAAAAAAAAQAAoAAAAAAAAAAAARAAoAAAAAAAAAAAASAAoAAAAAAAAAAAAMAAgAAAAAAAAAAAAMAAkAAAAAAAAAAAAQAAUAAAAAAAAAAAAQAAYAAAAAAAAAAAAQAAcAAAAAAAAAAAAPAAcAAAAAAAAAAAAPAAYAAAAAAAAAAAAPAAUAAAAAAAAAAAAIAAMAAAAAAAAAAAAJAAMAAAAAAAAAAAAKAAMAAAAAAAAAAAAJAAIAAAAAAAAAAAABAAUAAAAAAAAAAAABAAYAAAAAAAAAAAABAAcAAAAAAAAAAAABAAgAAAAAAAAAAAABAAkAAAAAAAAAAAACAAkAAAAAAAAAAAACAAgAAAAAAAAAAAABAAQAAAAAAAAAAAABAAMAAAAAAAAAAAABAAIAAAAAAAAAAAAGAAMAAAAAAAAAAAAHAAMAAAAAAAAAAAALAAMAAAAHAAAAAAATAAoAAAAAAAAAAAAUAAoAAAAAAAAAAAAVAAoAAAAAAAAAAAAWAAoAAAAAAAAAAAAXAAoAAAAAAAAAAAAYAAoAAAAAAAAAAAAZAAoAAAAAAAAAAAAaAAoAAAAAAAAAAAAbAAoAAAAAAAAAAAAcAAoAAAAAAAAAAAAdAAoAAAAAAAAAAAAeAAoAAAAAAAAAAAAfAAoAAAAAAAAAAAAgAAoAAAAAAAAAAAAhAAoAAAAAAAAAAAAiAAoAAAAAAAAAAAAjAAoAAAAAAAAAAAAkAAoAAAAAAAAAAAAlAAoAAAAAAAAAAAAmAAoAAAAAAAAAAAAnAAoAAAAAAAAAAAAoAAoAAAAAAAAAAAApAAoAAAAAAAAAAAAqAAoAAAAAAAAAAAArAAoAAAAAAAAAAAAsAAoAAAAAAAAAAAAtAAoAAAAAAAAAAAAuAAoAAAAAAAAAAAAvAAoAAAAAAAAAAAAwAAoAAAAAAAAAAAAxAAoAAAAAAAAAAAAyAAoAAAAAAAAAAAAzAAoAAAAAAAAAAAA0AAoAAAAAAAAAAAA1AAoAAAAAAAAAAAA2AAoAAAAAAAAAAAA2AAkAAAAAAAAAAAA2AAgAAAAAAAAAAAA2AAcAAAAAAAAAAAA2AAYAAAAAAAAAAAA2AAUAAAAAAAAAAAA2AAQAAAAAAAAAAAA=")
-tile_set = SubResource("TileSet_41p5g")
-
-[node name="Player" parent="." instance=ExtResource("1_7km1b")]
-position = Vector2(136, 128)
-
-[node name="Camera2D2" type="Camera2D" parent="." node_paths=PackedStringArray("target")]
-position = Vector2(136, 96.032)
-scale = Vector2(0.333, 0.333)
-script = ExtResource("3_02f3j")
-target = NodePath("../Player")
-
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="ManaBar" type="TextureProgressBar" parent="CanvasLayer"]
@@ -132,7 +119,9 @@ offset_bottom = 80.0
 scale = Vector2(3, 3)
 value = 50.0
 fill_mode = 4
+texture_under = ExtResource("5_gqor0")
 texture_progress = ExtResource("5_gqor0")
+tint_under = Color(0, 0, 0, 0.784314)
 tint_progress = Color(0.79244, 0.420602, 0.934961, 1)
 script = ExtResource("4_5d4xu")
 
@@ -141,11 +130,12 @@ script = ExtResource("6_c8ks3")
 node = NodePath("..")
 
 [node name="CardGauge" type="HBoxContainer" parent="CanvasLayer"]
-offset_left = 136.0
-offset_top = 64.0
-offset_right = 176.0
-offset_bottom = 74.0
+offset_left = 128.0
+offset_top = 80.0
+offset_right = 222.0
+offset_bottom = 90.0
 scale = Vector2(3, 3)
+theme_override_constants/separation = -2
 script = ExtResource("6_r0rmd")
 
 [node name="TextureProgressBar" type="TextureProgressBar" parent="CanvasLayer/CardGauge"]
@@ -210,6 +200,34 @@ fill_mode = 3
 texture_under = ExtResource("6_k7ovn")
 texture_progress = ExtResource("6_k7ovn")
 tint_under = Color(0.244776, 0.244776, 0.244776, 1)
+
+[node name="HPBar" type="TextureProgressBar" parent="CanvasLayer"]
+offset_left = 128.0
+offset_top = 64.0
+offset_right = 304.0
+offset_bottom = 72.0
+value = 50.0
+nine_patch_stretch = true
+texture_under = ExtResource("9_g457d")
+texture_progress = ExtResource("9_g457d")
+tint_under = Color(0, 0, 0, 0.415686)
+tint_progress = Color(0.558, 1, 0.32, 1)
+script = ExtResource("10_7aewi")
+
+[node name="TileMapLayer" type="TileMapLayer" parent="."]
+texture_filter = 1
+scale = Vector2(3, 3)
+tile_map_data = PackedByteArray("AAAHAAoAAAAAAAAAAAAIAAoAAAAAAAAAAAAJAAoAAAAAAAAAAAAKAAoAAAAAAAAAAAALAAoAAAAAAAAAAAAMAAoAAAAAAAAAAAANAAoAAAAAAAAAAAAOAAoAAAAAAAAAAAALAAkAAAAAAAAAAAAGAAoAAAAAAAAAAAAFAAoAAAAAAAAAAAAEAAoAAAAAAAAAAAADAAoAAAAAAAAAAAACAAoAAAAAAAAAAAABAAoAAAAAAAAAAAAAAAoAAAAAAAAAAAD//woAAAAAAAAAAAAPAAoAAAAAAAAAAAAQAAoAAAAAAAAAAAARAAoAAAAAAAAAAAASAAoAAAAAAAAAAAAMAAgAAAAAAAAAAAAMAAkAAAAAAAAAAAAQAAUAAAAAAAAAAAAQAAYAAAAAAAAAAAAQAAcAAAAAAAAAAAAPAAcAAAAAAAAAAAAPAAYAAAAAAAAAAAAPAAUAAAAAAAAAAAAIAAMAAAAAAAAAAAAJAAMAAAAAAAAAAAAKAAMAAAAAAAAAAAAJAAIAAAAAAAAAAAABAAUAAAAAAAAAAAABAAYAAAAAAAAAAAABAAcAAAAAAAAAAAABAAgAAAAAAAAAAAABAAkAAAAAAAAAAAACAAkAAAAAAAAAAAACAAgAAAAAAAAAAAABAAQAAAAAAAAAAAABAAMAAAAAAAAAAAABAAIAAAAAAAAAAAAGAAMAAAAAAAAAAAAHAAMAAAAAAAAAAAALAAMAAAAHAAAAAAATAAoAAAAAAAAAAAAUAAoAAAAAAAAAAAAVAAoAAAAAAAAAAAAWAAoAAAAAAAAAAAAXAAoAAAAAAAAAAAAYAAoAAAAAAAAAAAAZAAoAAAAAAAAAAAAaAAoAAAAAAAAAAAAbAAoAAAAAAAAAAAAcAAoAAAAAAAAAAAAdAAoAAAAAAAAAAAAeAAoAAAAAAAAAAAAfAAoAAAAAAAAAAAAgAAoAAAAAAAAAAAAhAAoAAAAAAAAAAAAiAAoAAAAAAAAAAAAjAAoAAAAAAAAAAAAkAAoAAAAAAAAAAAAlAAoAAAAAAAAAAAAmAAoAAAAAAAAAAAAnAAoAAAAAAAAAAAAoAAoAAAAAAAAAAAApAAoAAAAAAAAAAAAqAAoAAAAAAAAAAAArAAoAAAAAAAAAAAAsAAoAAAAAAAAAAAAtAAoAAAAAAAAAAAAuAAoAAAAAAAAAAAAvAAoAAAAAAAAAAAAwAAoAAAAAAAAAAAAxAAoAAAAAAAAAAAAyAAoAAAAAAAAAAAAzAAoAAAAAAAAAAAA0AAoAAAAAAAAAAAA1AAoAAAAAAAAAAAA2AAoAAAAAAAAAAAA2AAkAAAAAAAAAAAA2AAgAAAAAAAAAAAA2AAcAAAAAAAAAAAA2AAYAAAAAAAAAAAA2AAUAAAAAAAAAAAA2AAQAAAAAAAAAAAA=")
+tile_set = SubResource("TileSet_41p5g")
+
+[node name="Player" parent="." instance=ExtResource("1_7km1b")]
+position = Vector2(136, 128)
+
+[node name="Camera2D2" type="Camera2D" parent="." node_paths=PackedStringArray("target")]
+position = Vector2(136, 96.032)
+scale = Vector2(0.333, 0.333)
+script = ExtResource("3_02f3j")
+target = NodePath("../Player")
 
 [node name="Hopper" parent="." instance=ExtResource("6_pn7su")]
 position = Vector2(317, 427)
