@@ -83,7 +83,7 @@ var _state_run = {
 
             elif not player.is_on_floor():
                 fsm.set_state(_state_fall)
-            elif Input.is_action_just_pressed("ATK"):
+            elif Input.is_action_just_pressed("ATK") and not player.is_mana_break:
                 player.request_perform_attack.emit()
             elif Input.is_action_just_pressed("M_ATK"):
                 fsm.set_state(_state_m_atk)
@@ -105,7 +105,7 @@ var _state_jump = {
             apply_gravity(_delta)
             horizontalMovement(_delta)
     
-            if Input.is_action_just_pressed("M_ATK"):
+            if Input.is_action_just_pressed("M_ATK") and not player.is_mana_break:
                 player.request_perform_attack.emit()
             
             if player.velocity.y >= 0:
@@ -126,8 +126,8 @@ var _state_fall = {
             apply_gravity(_delta)
             horizontalMovement(_delta)
             
-            if Input.is_action_just_pressed("M_ATK"):
-                player.request_perform_attack.emit()    
+            if Input.is_action_just_pressed("M_ATK") and not player.is_mana_break:
+                player.request_perform_attack.emit()
             
             if player.velocity.y < 0:
                 player.velocity.y = lerp(player.velocity.y, 0.0, 0.25)

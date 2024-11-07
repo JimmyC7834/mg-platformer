@@ -124,6 +124,9 @@ region = Rect2(32, 48, 32, 16)
 animations = [{
 "frames": [{
 "duration": 1.0,
+"texture": null
+}, {
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_nyvv1")
 }, {
 "duration": 1.0,
@@ -134,9 +137,12 @@ animations = [{
 }],
 "loop": false,
 "name": &"m_slash01",
-"speed": 12.0
+"speed": 16.0
 }, {
 "frames": [{
+"duration": 1.0,
+"texture": null
+}, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_je4qe")
 }, {
@@ -148,9 +154,12 @@ animations = [{
 }],
 "loop": false,
 "name": &"m_slash02",
-"speed": 12.0
+"speed": 16.0
 }, {
 "frames": [{
+"duration": 1.0,
+"texture": null
+}, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_xodio")
 }, {
@@ -162,9 +171,12 @@ animations = [{
 }],
 "loop": false,
 "name": &"m_slash03",
-"speed": 12.0
+"speed": 16.0
 }, {
 "frames": [{
+"duration": 1.0,
+"texture": null
+}, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_qkj0g")
 }, {
@@ -176,7 +188,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"m_slash04",
-"speed": 12.0
+"speed": 16.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -342,9 +354,7 @@ texture_filter = 1
 position = Vector2(40, 12)
 scale = Vector2(3.5, 3.5)
 sprite_frames = SubResource("SpriteFrames_noq7c")
-animation = &"slash04"
-frame = 2
-frame_progress = 1.0
+animation = &"m_slash04"
 
 [node name="RayCast2D" type="RayCast2D" parent="Rotatable"]
 position = Vector2(0, 16)
@@ -383,7 +393,7 @@ position = Vector2(0, -48)
 scale = Vector2(3, 3)
 sprite_frames = ExtResource("4_y8iwo")
 animation = &"pray"
-frame_progress = 0.806376
+frame_progress = 0.450312
 flip_h = true
 
 [node name="CardVisual" type="Node2D" parent="."]

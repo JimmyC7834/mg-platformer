@@ -46,7 +46,8 @@ func _ready() -> void:
     EventBus.on_player_mana_changed.emit(mana)
 
 func _physics_process(delta: float) -> void:
-    set_mana(max(0, mana - (MANA_BREAK_DECAY_RATE if is_mana_break else MANA_DECAY_RATE) * delta))
+    if is_mana_break:
+        set_mana(max(0, mana - (MANA_BREAK_DECAY_RATE) * delta))
     EventBus.on_player_mana_changed.emit(mana)
 
 func attacked_by(e: Enemy):
